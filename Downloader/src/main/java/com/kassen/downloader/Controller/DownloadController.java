@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -22,7 +23,7 @@ public class DownloadController {
 
     @GetMapping("/download")
     public ResponseEntity<String> download(@RequestParam String url, @RequestParam String localPath) throws IOException {
-        List<String> imageLinks = downloadService.scrapeImageLinks(url);
+        Map<String, String> imageLinks = downloadService.scrapeImageLinks(url);
 //        for(String link : imageLinks) {
 //            String fileName = extractFileNameFromLink(link); // Implement this
 //            if(!downloadService.doesFileExist(localPath, fileName)) {

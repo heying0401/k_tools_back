@@ -15,9 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DownloadService {
@@ -40,17 +38,25 @@ public class DownloadService {
         }
     }
 
-    public List<String> scrapeImageLinks(String url) throws IOException {
+    public Map<String, String> scrapeImageLinks(String url) throws IOException {
 
         Document doc = Jsoup.connect(url).get();
-        Elements imageElements = doc.select("img.your_selector_here");
-        List<String> imageLinks = new ArrayList<>();
-        for (Element imgElement : imageElements) {
-            String src = imgElement.absUrl("src");
-            imageLinks.add(src);
+        // Selecting the anchor tags within the relevant div containers
+        Elements anchorElements = doc.select("div[data-automation=AssetGrids_GridItemContainer_div] a[data-automation=AssetGrids_GridItemClickableArea_link]");
+
+        Map<String, String> imageDetails = new HashMap<>();
+
+        for (Element anchor : anchorElements) {
+            // Extract details page URL
+            String detailsPageUrl = anchor.absUrl("href");
+
+            // Extract thumbnail URL from the associated image tag
+            String thumbnailUrl = anchor.parent().selectFirst("img.mui-1l7n00y-thumbnail").absUrl("src");
+
+            imageDetails.put(detailsPageUrl, thumbnailUrl);
         }
 
-        return imageLinks;
+        return imageDetails;
     }
 
     public boolean doesFileExist(String path, String filename) {
