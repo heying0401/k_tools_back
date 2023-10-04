@@ -20,21 +20,14 @@ class DownloaderApplicationTests {
 
 
     @Test
-    void download() throws IOException {
-
-        ds.downloadFile("https://img.freepik.com/free-vector/fresh-pumpkin-white-b_1308-39708.jpg?w=2000", "C:\\Users\\h-yu\\Downloads");
-//        List<String> list = ds.scrapeImageLinks("https://www.shutterstock.com/search/pumpkin");
-
-    }
-
-    @Test
     void scrap() throws IOException {
         Map<String, String> map = ds.scrapeImageLinks("https://www.shutterstock.com/search/pumpkin");
+
+        ds.downloadFile(map, "D:\\Misc\\testdownload");
         // Using Jackson
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(map);
-        System.out.println(jsonString);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String jsonString = objectMapper.writeValueAsString(map);
+//        System.out.println(jsonString);
 
     }
-
 }

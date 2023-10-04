@@ -20,12 +20,24 @@ import java.util.*;
 @Service
 public class DownloadService {
 
-    public void downloadFile(String urlString, String destination) throws IOException{
+    public boolean downloadFile(Map<String, String> urlMap, String destination) throws IOException {
+
+        try {
+            for (Map.Entry<String, String> entry : urlMap.entrySet()) {
+                downloadSingleFile(entry.getValue(), destination);  // here, entry.getValue() is the thumbnail URL
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public void downloadSingleFile(String urlString, String destination) throws IOException {
 
         URL url = URI.create(urlString).toURL();
         Path destinationDir = Paths.get(destination);
 
-        String fileName = extractImageNameFromUrl(url) + ".jpg";
+        String fileName = extractImageNameFromUrl(url);
         Path destinationFile = destinationDir.resolve(fileName);
 
         // Ensure the destination directory exists
@@ -65,11 +77,14 @@ public class DownloadService {
     }
 
     private String extractImageNameFromUrl(URL url) {
-        String[] parts = url.getPath().split("/");
-        String lastPart = parts[parts.length - 1];
-        // Split by '-' and take everything but the first segment (assuming the structure remains consistent)
-        String[] nameParts = lastPart.split("-");
-        return String.join("-", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
-    }
 
+        String path = url.getPath();
+        return path.substring(path.lastIndexOf('/') + 1);
+
+//        String[] parts = url.getPath().split("/");
+//        String lastPart = parts[parts.length - 1];
+//        // Split by '-' and take everything but the first segment (assuming the structure remains consistent)
+//        String[] nameParts = lastPart.split("-");
+//        return String.join("-", Arrays.copyOfRange(nameParts, 0, nameParts.length - 1));
+    }
 }
