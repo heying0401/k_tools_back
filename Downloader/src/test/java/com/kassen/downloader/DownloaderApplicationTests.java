@@ -1,15 +1,11 @@
 package com.kassen.downloader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kassen.downloader.Service.DownloadService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
@@ -29,5 +25,11 @@ class DownloaderApplicationTests {
 //        String jsonString = objectMapper.writeValueAsString(map);
 //        System.out.println(jsonString);
 
+    }
+
+    @Test
+    void numberString(){
+        String s = ds.extractNumber("shutterstock_1934050523");
+        System.out.println(s);
     }
 }

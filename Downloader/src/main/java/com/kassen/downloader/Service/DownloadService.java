@@ -16,37 +16,47 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class DownloadService {
 
-    public boolean downloadFile(Map<String, String> urlMap, String destination) throws IOException {
+    public int downloadFile(Map<String, String> urlMap, String destination) throws IOException {
+
+        int number = 0;
 
         try {
             for (Map.Entry<String, String> entry : urlMap.entrySet()) {
-                downloadSingleFile(entry.getValue(), destination);  // here, entry.getValue() is the thumbnail URL
+                downloadSingleFile(entry.getValue(), destination);// here, entry.getValue() is the thumbnail URL
+                number++;
+            }
+            return number;
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
+    public boolean downloadSingleFile(String urlString, String destination) throws IOException {
+
+        try {
+            URL url = URI.create(urlString).toURL();
+            Path destinationDir = Paths.get(destination);
+
+            String fileName = extractImageNameFromUrl(url);
+            Path destinationFile = destinationDir.resolve(fileName);
+
+            // Ensure the destination directory exists
+            if (Files.notExists(destinationDir)) {
+                Files.createDirectories(destinationDir);
+            }
+
+            try (InputStream in = url.openStream()) {
+                Files.copy(in, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
             return true;
         } catch (IOException e) {
             return false;
-        }
-    }
-
-    public void downloadSingleFile(String urlString, String destination) throws IOException {
-
-        URL url = URI.create(urlString).toURL();
-        Path destinationDir = Paths.get(destination);
-
-        String fileName = extractImageNameFromUrl(url);
-        Path destinationFile = destinationDir.resolve(fileName);
-
-        // Ensure the destination directory exists
-        if (Files.notExists(destinationDir)) {
-            Files.createDirectories(destinationDir);
-        }
-
-        try (InputStream in = url.openStream()) {
-            Files.copy(in, destinationFile, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -67,14 +77,22 @@ public class DownloadService {
 
             imageDetails.put(detailsPageUrl, thumbnailUrl);
         }
+//        System.out.println(imageDetails.keySet());
+//        System.out.println(imageDetails.values());
 
         return imageDetails;
     }
 
-    public boolean doesFileExist(String path, String filename) {
-        File file = new File(path + filename);
-        return file.exists();
+    public String extractNumber(String input) {
+        Pattern pattern = Pattern.compile("[-_](\\d+)(\\..*|$)");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null; // or throw an exception or return a default value
     }
+
+
 
     private String extractImageNameFromUrl(URL url) {
 
