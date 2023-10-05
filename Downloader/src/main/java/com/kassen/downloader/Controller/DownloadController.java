@@ -25,6 +25,7 @@ public class DownloadController {
     public ResponseEntity<Map<String, Integer>> download(@RequestBody DownloadRequest dq) throws IOException {
         String url = dq.getUrl();
         String destination = dq.getDestination();
+        System.out.println(destination);
         List<String> filesExisted = dq.getFilesExisted();
         Boolean overwrite = dq.getOverwrite();
 
@@ -77,28 +78,5 @@ public class DownloadController {
         response.put("error", error);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-
-
-//        StringBuilder responseMessage = new StringBuilder();
-//
-//        if (downloaded > 0) {
-//            responseMessage.append(downloaded).append("ファイルをダウンロードしました。");
-//        }
-//
-//        if (overwrite) {
-//            if (replaced > 0) {
-//                responseMessage.append(replaced).append("ファイルを置き換えました。");
-//            }
-//        } else {
-//            if (skipped > 0) {
-//                responseMessage.append(skipped).append("ファイルをスキップしました。");
-//            }
-//        }
-//
-//        if (error > 0) {
-//            responseMessage.append(error).append("ファイルをダウンロードできませんでした。");
-//        }
-//
-//        return new ResponseEntity<>(responseMessage.toString(), HttpStatus.OK);
     }
 }

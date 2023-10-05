@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
 @Service
 public class DownloadService {
 
-    public int downloadFile(Map<String, String> urlMap, String destination) throws IOException {
+    public int downloadFile(Map<String, String> urlMap, String destination){
 
         int number = 0;
 
