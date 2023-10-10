@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class DownloadRequest {
 
-    private String url;
+    private List<String> urls;
     private String destination;
     private List<String> filesExisted;
     private Boolean overwrite;

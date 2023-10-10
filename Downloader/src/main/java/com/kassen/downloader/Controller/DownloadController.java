@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class DownloadController {
 
     @PostMapping("/download")
     public ResponseEntity<Map<String, Integer>> download(@RequestBody DownloadRequest dq) throws IOException {
-        String url = dq.getUrl();
+        List<String> urls = dq.getUrls();
         String destination = dq.getDestination();
 //        System.out.println(destination);
         List<String> filesExisted = dq.getFilesExisted();
@@ -34,8 +33,14 @@ public class DownloadController {
 //        System.out.println("is overwrite: " + overwrite);
 //        System.out.println("is notCheckDuplicate: " + notCheckDuplicate);
 
-        Map<String, String> imageLinks = downloadService.scrapeImageLinks(url);
-        Map<String, Integer> response = downloadService.downloadFile(imageLinks, destination, overwrite, notCheckDuplicate);
+        Map<String, String> allLinks = new HashMap<>();
+
+        for (String url : urls) {
+            Map<String, String> imageLinks = downloadService.scrapeImageLinks(url);
+            allLinks.putAll(imageLinks);
+
+        }
+        Map<String, Integer> response = downloadService.downloadFile(allLinks, destination, overwrite, notCheckDuplicate);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

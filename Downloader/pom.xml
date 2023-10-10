@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Downloader</name>
     <description>Downloader</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>20</java.version>
     </properties>
@@ -27,12 +28,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.16.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-docker-compose</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

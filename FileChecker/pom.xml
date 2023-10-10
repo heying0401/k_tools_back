@@ -12,7 +12,7 @@
     <artifactId>FileChecker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>FileChecker</name>
-    <description>FileChecker</description>\
+    <description>FileChecker</description>
     <packaging>jar</packaging>
     <properties>
         <java.version>20</java.version>

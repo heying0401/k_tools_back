@@ -15,7 +15,6 @@
     <modules>
         <module>FileChecker</module>
         <module>Downloader</module>
-        <module>demo</module>
     </modules>
     <name>back</name>
     <description>back</description>
