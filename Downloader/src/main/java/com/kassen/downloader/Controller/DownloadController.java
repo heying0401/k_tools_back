@@ -25,57 +25,17 @@ public class DownloadController {
     public ResponseEntity<Map<String, Integer>> download(@RequestBody DownloadRequest dq) throws IOException {
         String url = dq.getUrl();
         String destination = dq.getDestination();
-        System.out.println(destination);
+//        System.out.println(destination);
         List<String> filesExisted = dq.getFilesExisted();
-        Boolean overwrite = dq.getOverwrite();
+//        System.out.println(filesExisted);
+        boolean notCheckDuplicate = filesExisted.isEmpty();
+        boolean overwrite = dq.getOverwrite();
+
+//        System.out.println("is overwrite: " + overwrite);
+//        System.out.println("is notCheckDuplicate: " + notCheckDuplicate);
 
         Map<String, String> imageLinks = downloadService.scrapeImageLinks(url);
-        Map<String, Integer> response = new HashMap<>();
-
-        if (filesExisted.isEmpty()){
-            int downloadedFiles = downloadService.downloadFile(imageLinks, destination);
-            response.put("downloaded", downloadedFiles);
-            response.put("replaced", 0);
-            response.put("skipped", 0);
-            response.put("error", 0);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-
-        List<String> fileNumberExisted = new ArrayList<>();
-
-        for (String s : filesExisted) {
-            String s1 = downloadService.extractNumber(s);
-            fileNumberExisted.add(s1);
-        }
-
-        int error = 0;
-        int downloaded = 0;
-        int replaced = 0;
-        int skipped = 0;
-
-        for (Map.Entry<String, String> entry : imageLinks.entrySet()) {
-            String urlNumber = downloadService.extractNumber(entry.getKey());
-            boolean fileExists = fileNumberExisted.contains(urlNumber);
-
-            if (fileExists && !overwrite) {
-                skipped++;
-                continue;
-            }
-
-            boolean downloadStatus = downloadService.downloadSingleFile(entry.getValue(), destination);
-
-            if (downloadStatus) {
-                downloaded++;
-                if (fileExists) replaced++;
-            } else {
-                error++;
-            }
-        }
-
-        response.put("downloaded", downloaded);
-        response.put("replaced", replaced);
-        response.put("skipped", skipped);
-        response.put("error", error);
+        Map<String, Integer> response = downloadService.downloadFile(imageLinks, destination, overwrite, notCheckDuplicate);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
