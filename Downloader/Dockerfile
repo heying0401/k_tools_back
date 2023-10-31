@@ -1,5 +1,5 @@
 # Use the official Maven image
-FROM maven:3.9.4-eclipse-temurin-20 AS build
+FROM maven:3.9.5-eclipse-temurin-21 AS build
 LABEL authors="heying.yu"
 
 # Set the working directory in the builder stage
@@ -17,7 +17,7 @@ COPY ./src ./src
 RUN mvn package
 
 # Run stage
-FROM openjdk:20-slim
+FROM openjdk:21-slim
 
 WORKDIR /app
 
