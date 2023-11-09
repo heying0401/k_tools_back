@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 public class SyncOperation {
 
     @TableId
-    private Long id;
-    private String rootPath;
-    private String targetPath;
+    private Integer id;
+    private String root;
+    private String target;
     @EnumValue
     private SyncStatus status;
     private Integer durationSeconds;

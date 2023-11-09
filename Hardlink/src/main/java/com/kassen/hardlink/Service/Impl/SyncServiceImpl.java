@@ -3,7 +3,6 @@ package com.kassen.hardlink.Service.Impl;
 import com.kassen.hardlink.Mapper.SyncMapper;
 import com.kassen.hardlink.POJO.SyncOperation;
 import com.kassen.hardlink.Service.SyncService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,15 @@ public class SyncServiceImpl implements SyncService {
     }
 
     @Override
-    public Integer addSync(SyncOperation syncOperation) {
-        return syncMapper.insert(syncOperation);
+    public SyncOperation addSync(SyncOperation syncOperation) {
+        int rowsAffected = syncMapper.addSyncOp(syncOperation);
+        if (rowsAffected > 0) {
+            // The id property of syncOperation will now be set to the generated key
+            // If you need to fetch the full entity, you can do so like this:
+            return syncMapper.selectById(syncOperation.getId());
+        } else {
+            return null;
+        }
     }
 
     @Override
