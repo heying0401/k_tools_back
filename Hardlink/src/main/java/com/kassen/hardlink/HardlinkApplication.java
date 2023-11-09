@@ -1,13 +1,15 @@
 package com.kassen.hardlink;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+@MapperScan("com.kassen.hardlink.Mapper")
+public class HardlinkApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(HardlinkApplication.class, args);
     }
 
 }

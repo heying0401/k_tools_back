@@ -1,10 +1,13 @@
-package com.kassen.hardlink;
+package com.kassen.hardlink.Service;
+
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class hardlink {
+@Service
+public class HardlinkService {
 
     public String runPythonScript(String scriptPath, String arg1, String arg2) {
         ProcessBuilder processBuilder = new ProcessBuilder("python3", scriptPath, arg1, arg2);
