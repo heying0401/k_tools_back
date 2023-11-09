@@ -1,5 +1,6 @@
 package com.kassen.hardlink.POJO;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.time.OffsetDateTime;
 
 
 @Data
+@TableName("sync_operations")
 public class SyncOperation {
 
     private Long id;
@@ -14,7 +16,7 @@ public class SyncOperation {
     private String targetPath;
     private SyncStatus status;
     private Integer durationSeconds;
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // Enum for status
