@@ -1,4 +1,4 @@
-package com.kassen.demo;
+package com.kassen.hardlink;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.kassen.demo;
+package com.kassen.hardlink;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
