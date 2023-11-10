@@ -37,4 +37,9 @@ public class SyncServiceImpl implements SyncService {
     public List<SyncOperation> getSyncList() {
         return syncMapper.getSyncList();
     }
+
+    @Override
+    public SyncOperation selectById(Integer id) {
+        return syncMapper.selectById(id);
+    }
 }

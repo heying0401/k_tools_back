@@ -27,9 +27,7 @@ public class SyncController {
     public ResponseEntity<?> addSync(@RequestBody SyncOperation syncOperation) {
 
         log.info("Received sync operation: {}", syncOperation);
-
         SyncOperation createdSyncOperation = syncService.addSync(syncOperation);
-        System.out.println(createdSyncOperation);
         if (createdSyncOperation != null) {
             // Operation was successful
             return ResponseEntity.ok(createdSyncOperation);
@@ -41,17 +39,15 @@ public class SyncController {
 
     @GetMapping("/load")
     public ResponseEntity<List<SyncOperation>> getSyncList() {
-        System.out.println("RECEIVED");
         List<SyncOperation> operations = syncService.getSyncList();
-        System.out.println(operations);
         return ResponseEntity.ok(operations);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteSync(Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteSync(@PathVariable Integer id) {
         int result = syncService.deleteSync(id);
         if (result == 1) {
-            return ResponseEntity.ok(HttpStatus.OK);
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
         }
