@@ -2,27 +2,32 @@ package com.kassen.hardlink.Service.Impl;
 
 import com.kassen.hardlink.Mapper.SyncMapper;
 import com.kassen.hardlink.POJO.SyncOperation;
+import com.kassen.hardlink.Service.HardlinkService;
 import com.kassen.hardlink.Service.SyncService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
 
 @Service
 public class SyncServiceImpl implements SyncService {
 
     private final SyncMapper syncMapper;
+    private final HardlinkService hardlinkService;
 
-    public SyncServiceImpl(SyncMapper syncMapper) {
+    public SyncServiceImpl(SyncMapper syncMapper, HardlinkService hardlinkService) {
         this.syncMapper = syncMapper;
+        this.hardlinkService = hardlinkService;
     }
 
     @Override
-    public SyncOperation addSync(SyncOperation syncOperation) {
+    public Integer addSync(SyncOperation syncOperation) {
         int rowsAffected = syncMapper.addSyncOp(syncOperation);
         if (rowsAffected > 0) {
-            // The id property of syncOperation will now be set to the generated key
-            // If you need to fetch the full entity, you can do so like this:
-            return syncMapper.selectById(syncOperation.getId());
+            SyncOperation createdOperation = syncMapper.selectById(syncOperation.getId());
+            hardlinkService.processSyncOp(syncMapper.selectById(createdOperation.getId()));
+            return rowsAffected;
         } else {
             return null;
         }
@@ -42,4 +47,5 @@ public class SyncServiceImpl implements SyncService {
     public SyncOperation selectById(Integer id) {
         return syncMapper.selectById(id);
     }
+
 }

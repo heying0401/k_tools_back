@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SyncService {
 
-    SyncOperation addSync(SyncOperation syncOperation);
+    Integer addSync(SyncOperation syncOperation);
     Integer deleteSync(Integer id);
     List<SyncOperation> getSyncList();
     SyncOperation selectById(Integer id);

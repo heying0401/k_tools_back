@@ -27,10 +27,11 @@ public class SyncController {
     public ResponseEntity<?> addSync(@RequestBody SyncOperation syncOperation) {
 
         log.info("Received sync operation: {}", syncOperation);
-        SyncOperation createdSyncOperation = syncService.addSync(syncOperation);
-        if (createdSyncOperation != null) {
+
+        Integer result = syncService.addSync(syncOperation);
+        if (result == 1) {
             // Operation was successful
-            return ResponseEntity.ok(createdSyncOperation);
+            return ResponseEntity.ok().build();
         } else {
             // Operation failed
             return ResponseEntity.badRequest().body("Sync operation could not be added");
