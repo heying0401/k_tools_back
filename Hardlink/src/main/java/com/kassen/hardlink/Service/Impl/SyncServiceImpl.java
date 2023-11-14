@@ -7,8 +7,6 @@ import com.kassen.hardlink.Service.SyncService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
 
 @Service
 public class SyncServiceImpl implements SyncService {

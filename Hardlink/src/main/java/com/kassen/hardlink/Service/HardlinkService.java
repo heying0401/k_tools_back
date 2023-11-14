@@ -3,12 +3,7 @@ package com.kassen.hardlink.Service;
 import com.kassen.hardlink.Mapper.SyncMapper;
 import com.kassen.hardlink.POJO.SyncOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 @Service
 public class HardlinkService {
@@ -20,8 +15,8 @@ public class HardlinkService {
 
 
 
+        syncOperation.setStatus(SyncOperation.SyncStatus.IN_PROGRESS);
         syncMapper.updateById(syncOperation);
-
     }
 
 }
