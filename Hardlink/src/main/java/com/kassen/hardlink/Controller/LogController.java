@@ -22,7 +22,7 @@ public class LogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> getLatestLogs(@RequestParam(defaultValue = "100") int lineCount) {
+    public ResponseEntity<List<String>> getLatestLogs(@RequestParam(defaultValue = "50") int lineCount) {
         try {
             List<String> logs = logService.readLastNLinesFromLogFile(lineCount);
             return ResponseEntity.ok(logs);
