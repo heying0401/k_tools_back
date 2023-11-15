@@ -4,7 +4,6 @@ import com.kassen.hardlink.Mapper.SyncMapper;
 import com.kassen.hardlink.POJO.SyncOperation;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,7 +23,6 @@ public class HardlinkService {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ConcurrentHashMap<Integer, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
     private static final Logger logger = Logger.getLogger(HardlinkService.class.getName());
     private static FileHandler fileHandler;
 
@@ -39,10 +37,7 @@ public class HardlinkService {
         }
     }
 
-
-
     public void processSyncOp(SyncOperation syncOperation) {
-
         long interval = syncOperation.getDurationSeconds();
         syncOperation.setStatus(SyncOperation.SyncStatus.IN_PROGRESS);
         syncMapper.updateById(syncOperation);
@@ -50,10 +45,12 @@ public class HardlinkService {
         ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
             performSync(syncOperation);
         }, 0, interval, TimeUnit.SECONDS);
+
+        scheduledTasks.put(syncOperation.getId(), scheduledFuture); // Store the future for later reference
+        System.out.println(scheduledTasks);
     }
 
     public void performSync(SyncOperation syncOperation){
-
         Path rootDir = Paths.get(syncOperation.getRoot());
         Path targetDir = Paths.get(syncOperation.getTarget());
 
@@ -106,8 +103,8 @@ public class HardlinkService {
         ScheduledFuture<?> scheduledTask = scheduledTasks.get(operationId);
         if (scheduledTask != null && !scheduledTask.isCancelled()) {
             scheduledTask.cancel(true); // Cancel the task
-            scheduledTasks.remove(operationId); // Remove from the tracking map
         }
+        scheduledTasks.remove(operationId); // Remove from the tracking map
 
         // Update the sync operation status to COMPLETED or remove it from the database
         return syncMapper.deleteById(operationId);
@@ -115,8 +112,8 @@ public class HardlinkService {
 
     @PreDestroy
     public void destroy() {
-        fileHandler.close();
-        logger.removeHandler(fileHandler);
+//        fileHandler.close();
+//        logger.removeHandler(fileHandler);
         scheduler.shutdownNow();
         try {
             if (!scheduler.awaitTermination(800, TimeUnit.MILLISECONDS)) {
