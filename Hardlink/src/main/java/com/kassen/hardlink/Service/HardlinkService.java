@@ -1,30 +1,33 @@
 package com.kassen.hardlink.Service;
 
-import com.kassen.hardlink.Mapper.SyncMapper;
 import com.kassen.hardlink.POJO.SyncOperation;
-import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 @Service
-public class HardlinkService {
+public class HardlinkService implements ApplicationListener<ContextClosedEvent> {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ConcurrentHashMap<Integer, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
     private static final Logger logger = Logger.getLogger(HardlinkService.class.getName());
     private static FileHandler fileHandler;
+    private final SyncService syncService;
+
+    public HardlinkService(@Lazy SyncService syncService) {
+        this.syncService = syncService;
+    }
 
     static {
         try {
@@ -52,11 +55,15 @@ public class HardlinkService {
     }
 
     public void performSync(SyncOperation syncOperation) throws IOException {
+        logger.log(Level.INFO, "同期操作開始 Job ID: {0}", syncOperation.getId());
+
         Path rootDir = Paths.get(syncOperation.getRoot());
         Path targetDir = Paths.get(syncOperation.getTarget());
 
-            // Traverse the root directory
-        Files.walkFileTree(rootDir, new SimpleFileVisitor<Path>() {
+        AtomicBoolean newFilesCopied = new AtomicBoolean(false);
+
+        // Traverse the root directory
+        Files.walkFileTree(rootDir, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // Construct the corresponding path in the target directory
@@ -70,8 +77,8 @@ public class HardlinkService {
                     // Copy the file
                     Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING);
 //                        System.out.println("Copied: " + file + " to " + targetPath);
-                    logger.log(Level.INFO, "Copied: {0} to {1}", new Object[]{file, targetPath});
-
+                    logger.log(Level.INFO, "コピー完了: {0} から {1} へ", new Object[]{file, targetPath});
+                    newFilesCopied.set(true);
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -84,11 +91,17 @@ public class HardlinkService {
                 if (Files.notExists(targetDirPath)) {
                     Files.createDirectories(targetDirPath);
 //                        System.out.println("Created directory: " + targetDirPath);
-                    logger.log(Level.INFO, "Created directory: {0}", targetDirPath);
+                    logger.log(Level.INFO, "ディレクトリ作成: {0}", targetDirPath);
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
+
+        if (newFilesCopied.get()) {
+            logger.log(Level.INFO, "新しいファイルのコピーが完了しました。Job ID: {0}", syncOperation.getId());
+        } else {
+            logger.log(Level.INFO, "新しいファイルは見つかりませんでした。Job ID: {0}", syncOperation.getId());
+        }
     }
 
     public void completeSyncOperation(Integer operationId) {
@@ -99,11 +112,12 @@ public class HardlinkService {
         scheduledTasks.remove(operationId); // Remove from the tracking map
     }
 
-    @PreDestroy
-    public void destroy() {
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
         fileHandler.close();
         logger.removeHandler(fileHandler);
-//        updateAllStatus(SyncOperation.SyncStatus.PAUSED);
+        int i = syncService.updateAllStatus(SyncOperation.SyncStatus.PAUSED);
+        System.out.println("Paused " + i + " Job(s)");
         scheduler.shutdownNow();
         try {
             if (!scheduler.awaitTermination(800, TimeUnit.MILLISECONDS)) {

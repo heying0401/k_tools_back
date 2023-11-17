@@ -95,6 +95,7 @@ public class SyncServiceImpl implements SyncService {
     @EventListener(ContextRefreshedEvent.class)
     public void resumeOperations() {
         List<SyncOperation> operationsToResume = findAllByStatus(SyncOperation.SyncStatus.PAUSED);
+        System.out.println(operationsToResume);
         for (SyncOperation operation : operationsToResume) {
             try {
                 hardlinkService.processSyncOp(operation);
