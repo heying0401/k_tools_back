@@ -32,7 +32,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
     static {
         try {
             // Configure the logger with handler and formatter
-            fileHandler = new FileHandler("/home/h-yu/Documents/synclogs.log", true);
+            fileHandler = new FileHandler("/home/h-yu/logs/synclogs.log", true);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {

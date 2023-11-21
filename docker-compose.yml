@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  filechecker:
+    build: ./filechecker
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  downloader:
+    build: ./downloader
+    ports:
+      - "8092:8092"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  hardlink:
+    build: ./hardlink
+    ports:
+      - "8093:8093"
+    volumes:
+      - /home/h-yu/Documents/logs:/home/h-yu/logs
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.115:3306/hardlink
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=K@ssen1225

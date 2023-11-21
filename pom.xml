@@ -13,9 +13,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>FileChecker</module>
-        <module>Downloader</module>
-        <module>Hardlink</module>
+        <module>filechecker</module>
+        <module>downloader</module>
+        <module>hardlink</module>
     </modules>
     <name>back</name>
     <description>back</description>
@@ -27,7 +27,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>

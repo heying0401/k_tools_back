@@ -14,15 +14,13 @@ import java.util.List;
 @Service
 public class LogService {
 
-    private final Path logFilePath = Paths.get("/home/h-yu/Documents/synclogs.log");
+    private final Path logFilePath = Paths.get("/home/h-yu/logs/synclogs.log");
 
     public List<String> readLastNLinesFromLogFile(int lineCount) throws IOException {
-//        System.out.println(logFilePath);
         List<String> result = new ArrayList<>();
         try (ReversedLinesFileReader reader = new ReversedLinesFileReader(logFilePath.toFile(), Charset.defaultCharset())) {
             String line;
             while ((line = reader.readLine()) != null && result.size() < lineCount) {
-//                System.out.println("LINE is" + line);
                 result.add(line);
             }
         }
