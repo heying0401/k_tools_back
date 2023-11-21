@@ -3,6 +3,7 @@ version: '2'
 services:
   filechecker:
     build: ./filechecker
+    restart: unless-stopped
     ports:
       - "8091:8091"
     environment:
@@ -10,6 +11,7 @@ services:
 
   downloader:
     build: ./downloader
+    restart: unless-stopped
     ports:
       - "8092:8092"
     environment:
@@ -17,10 +19,12 @@ services:
 
   hardlink:
     build: ./hardlink
+    restart: unless-stopped
     ports:
       - "8093:8093"
     volumes:
       - /home/h-yu/Documents/logs:/home/h-yu/logs
+      - /mnt:/mnt
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.115:3306/hardlink
