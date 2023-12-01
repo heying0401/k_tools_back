@@ -23,9 +23,9 @@ public class DownloadController {
     @PostMapping("/download")
     public ResponseEntity<Map<String, Integer>> download(@RequestBody DownloadRequest dq) throws IOException {
         List<String> urls = dq.getUrls();
-        System.out.println(urls);
+//        System.out.println(urls);
         String destination = dq.getDestination();
-//        System.out.println(destination);
+        System.out.println(destination);
         List<String> filesExisted = dq.getFilesExisted();
 //        System.out.println(filesExisted);
         boolean notCheckDuplicate = filesExisted.isEmpty();
@@ -40,7 +40,7 @@ public class DownloadController {
             Map<String, String> imageLinks = downloadService.scrapeImageLinks(url);
             allLinks.putAll(imageLinks);
         }
-        System.out.println(allLinks);
+//        System.out.println(allLinks);
 
         Map<String, Integer> response = downloadService.downloadFile(allLinks, destination, overwrite, notCheckDuplicate);
 

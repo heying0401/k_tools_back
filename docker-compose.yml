@@ -30,3 +30,4 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.115:3306/hardlink
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
+      - TZ=Asia/Tokyo

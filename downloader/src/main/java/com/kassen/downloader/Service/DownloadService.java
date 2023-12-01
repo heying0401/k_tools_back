@@ -69,8 +69,6 @@ public class DownloadService {
         }
     }
 
-
-
     public String downloadSingleFile(String urlString, String destination, boolean notCheckDuplicate) {
 
         String fileName;
