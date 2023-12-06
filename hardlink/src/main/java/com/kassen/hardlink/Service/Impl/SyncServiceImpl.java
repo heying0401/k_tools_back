@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,10 +76,18 @@ public class SyncServiceImpl implements SyncService {
     }
 
     @Override
-    public int updateOneStatus(Integer id, String status) {
+    public int updateOneStatus(Integer id, SyncOperation.SyncStatus status) {
         SyncOperation op = syncMapper.selectById(id);
-        op.setStatus(SyncOperation.SyncStatus.valueOf(status));
-        return syncMapper.updateById(op);
+        if (op != null) {
+            op.setStatus(status);
+            if (status == SyncOperation.SyncStatus.PAUSED){
+                hardlinkService.completeSyncOperation(id);
+            } else if (status == SyncOperation.SyncStatus.IN_PROGRESS) {
+                resumeOperations(Collections.singletonList(op));
+            }
+            return syncMapper.updateById(op);
+        }
+        return 0;
     }
 
     @Override
@@ -93,8 +102,12 @@ public class SyncServiceImpl implements SyncService {
     }
 
     @EventListener(ContextRefreshedEvent.class)
-    public void resumeOperations() {
-        List<SyncOperation> operationsToResume = findAllByStatus(SyncOperation.SyncStatus.PAUSED);
+    public void resumeOperationsOnStart() {
+        List<SyncOperation> operationsToResume = findAllByStatus(SyncOperation.SyncStatus.STOPPED);
+        resumeOperations(operationsToResume);
+    }
+
+    public void resumeOperations(List<SyncOperation> operationsToResume) {
         System.out.println(operationsToResume);
         for (SyncOperation operation : operationsToResume) {
             try {

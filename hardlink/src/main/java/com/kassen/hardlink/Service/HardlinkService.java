@@ -40,7 +40,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
         }
     }
 
-    public void processSyncOp(SyncOperation syncOperation) throws Exception {
+    public void processSyncOp(SyncOperation syncOperation){
         long interval = syncOperation.getDurationSeconds();
 
         ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
@@ -77,7 +77,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
                     // Copy the file
                     Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING);
 //                        System.out.println("Copied: " + file + " to " + targetPath);
-                    logger.log(Level.INFO, "コピー完了: {0} から {1} へ", new Object[]{file, targetPath});
+                    logger.log(Level.INFO, "コピー完了: {0}", relativePath);
                     newFilesCopied.set(true);
                 }
                 return FileVisitResult.CONTINUE;
@@ -88,10 +88,11 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
                 // Ensure the corresponding directory exists in the target directory
                 Path relativeDir = rootDir.relativize(dir);
                 Path targetDirPath = targetDir.resolve(relativeDir);
+
                 if (Files.notExists(targetDirPath)) {
                     Files.createDirectories(targetDirPath);
 //                        System.out.println("Created directory: " + targetDirPath);
-                    logger.log(Level.INFO, "ディレクトリ作成: {0}", targetDirPath);
+                    logger.log(Level.INFO, "ディレクトリ作成: {0}", relativeDir);
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -116,8 +117,8 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
     public void onApplicationEvent(ContextClosedEvent event) {
         fileHandler.close();
         logger.removeHandler(fileHandler);
-        int i = syncService.updateAllStatus(SyncOperation.SyncStatus.PAUSED);
-        System.out.println("Paused " + i + " Job(s)");
+        int i = syncService.updateAllStatus(SyncOperation.SyncStatus.STOPPED);
+        System.out.println("Stopped " + i + " Job(s)");
         scheduler.shutdownNow();
         try {
             if (!scheduler.awaitTermination(800, TimeUnit.MILLISECONDS)) {

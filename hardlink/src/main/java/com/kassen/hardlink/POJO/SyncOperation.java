@@ -24,7 +24,7 @@ public class SyncOperation {
 
     // Enum for status
     public enum SyncStatus {
-        PENDING, PAUSED, IN_PROGRESS, FAILED
+        PENDING, PAUSED, IN_PROGRESS, STOPPED, FAILED
     }
 }
 
