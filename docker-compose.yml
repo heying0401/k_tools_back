@@ -17,7 +17,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
 
-  hardlink:
+  sync:
     build: ./sync
     restart: unless-stopped
     ports:
