@@ -1,10 +1,10 @@
-package com.kassen.hardlink.Service.Impl;
+package com.kassen.sync.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.kassen.hardlink.Mapper.SyncMapper;
-import com.kassen.hardlink.POJO.SyncOperation;
-import com.kassen.hardlink.Service.HardlinkService;
-import com.kassen.hardlink.Service.SyncService;
+import com.kassen.sync.Mapper.SyncMapper;
+import com.kassen.sync.POJO.SyncOperation;
+import com.kassen.sync.Service.HardlinkService;
+import com.kassen.sync.Service.SyncService;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

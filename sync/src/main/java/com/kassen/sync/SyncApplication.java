@@ -1,15 +1,15 @@
-package com.kassen.hardlink;
+package com.kassen.sync;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.kassen.hardlink.Mapper")
-public class HardlinkApplication {
+@MapperScan("com.kassen.sync.Mapper")
+public class SyncApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HardlinkApplication.class, args);
+        SpringApplication.run(SyncApplication.class, args);
     }
 
 }

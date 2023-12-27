@@ -1,4 +1,4 @@
-package com.kassen.hardlink.Service;
+package com.kassen.sync.Service;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.stereotype.Service;

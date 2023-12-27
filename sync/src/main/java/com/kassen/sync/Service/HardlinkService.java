@@ -1,6 +1,6 @@
-package com.kassen.hardlink.Service;
+package com.kassen.sync.Service;
 
-import com.kassen.hardlink.POJO.SyncOperation;
+import com.kassen.sync.POJO.SyncOperation;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.ContextClosedEvent;

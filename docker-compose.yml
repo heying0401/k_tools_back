@@ -18,7 +18,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
 
   hardlink:
-    build: ./hardlink
+    build: ./sync
     restart: unless-stopped
     ports:
       - "8093:8093"
@@ -27,7 +27,7 @@ services:
       - /mnt:/mnt
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.17:3306/hardlink
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo

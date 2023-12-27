@@ -1,7 +1,7 @@
-package com.kassen.hardlink.Controller;
+package com.kassen.sync.Controller;
 
-import com.kassen.hardlink.POJO.SyncOperation;
-import com.kassen.hardlink.Service.SyncService;
+import com.kassen.sync.POJO.SyncOperation;
+import com.kassen.sync.Service.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

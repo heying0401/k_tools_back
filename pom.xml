@@ -15,7 +15,8 @@
     <modules>
         <module>filechecker</module>
         <module>downloader</module>
-        <module>hardlink</module>
+        <module>sync</module>
+        <module>purchase</module>
     </modules>
     <name>back</name>
     <description>back</description>

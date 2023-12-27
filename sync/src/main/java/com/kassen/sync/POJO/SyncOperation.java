@@ -1,4 +1,4 @@
-package com.kassen.hardlink.POJO;
+package com.kassen.sync.POJO;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableId;

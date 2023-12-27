@@ -1,6 +1,6 @@
-package com.kassen.hardlink.Controller;
+package com.kassen.sync.Controller;
 
-import com.kassen.hardlink.Service.LogService;
+import com.kassen.sync.Service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

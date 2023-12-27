@@ -1,6 +1,6 @@
-package com.kassen.hardlink.Service;
+package com.kassen.sync.Service;
 
-import com.kassen.hardlink.POJO.SyncOperation;
+import com.kassen.sync.POJO.SyncOperation;
 
 import java.util.List;
 

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kassen</groupId>
-    <artifactId>hardlink</artifactId>
+    <artifactId>sync</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>hardlink</name>
-    <description>hardlink</description>
+    <name>sync</name>
+    <description>sync</description>
     <packaging>jar</packaging>
     <properties>
         <java.version>21</java.version>
