@@ -1,13 +1,6 @@
 package com.kassen.purchase.POJO;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-
 
 @Data
 public class PurchaseRequestDTO {
