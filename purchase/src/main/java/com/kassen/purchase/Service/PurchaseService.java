@@ -1,9 +1,10 @@
 package com.kassen.purchase.Service;
 
 import com.kassen.purchase.POJO.PurchaseRequest;
+import com.kassen.purchase.POJO.PurchaseRequestDTO;
 
 public interface PurchaseService {
 
-    int addPurchase (PurchaseRequest purchaseRequest);
+    boolean addPurchase (PurchaseRequestDTO purchaseRequestDTO);
 
 }

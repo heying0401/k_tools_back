@@ -1,18 +1,17 @@
 package com.kassen.purchase.POJO;
 
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 
 @Data
-@TableName("PurchaseRequests")
-public class PurchaseRequest{
+public class PurchaseRequestDTO {
 
-    @TableId
     private Integer id;
 
     private String department;
@@ -34,22 +33,6 @@ public class PurchaseRequest{
     private String purchaseSource;
 
     private String purchaseSourceUrl;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        createdAt = now;
-        updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 
 }
 
