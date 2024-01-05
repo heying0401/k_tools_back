@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -20,12 +20,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     public boolean addPurchase(PurchaseRequestDTO purchaseRequestDTO) {
         PurchaseRequest purchaseRequest = new PurchaseRequest();
         BeanUtils.copyProperties(purchaseRequestDTO, purchaseRequest);
-
-        LocalDateTime now = LocalDateTime.now();
-        purchaseRequest.setCreatedAt(now);
-        purchaseRequest.setUpdatedAt(now);
-
         int rowsAffected = purchaseMapper.insert(purchaseRequest);
         return rowsAffected > 0;
+    }
+
+    @Override
+    public List<PurchaseRequest> loadRequests() {
+        return purchaseMapper.loadRequests();
     }
 }

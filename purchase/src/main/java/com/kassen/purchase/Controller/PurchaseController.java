@@ -1,11 +1,14 @@
 package com.kassen.purchase.Controller;
 
+import com.kassen.purchase.POJO.PurchaseRequest;
 import com.kassen.purchase.POJO.PurchaseRequestDTO;
 import com.kassen.purchase.Service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -17,6 +20,7 @@ public class PurchaseController {
 
     @PostMapping("/addPurchase")
     public ResponseEntity<?> addPurchase(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
+        System.out.println(purchaseRequestDTO);
         boolean isAdded = purchaseService.addPurchase(purchaseRequestDTO);
         if (isAdded) {
             return new ResponseEntity<>("Purchase request added successfully.", HttpStatus.CREATED);
@@ -24,4 +28,10 @@ public class PurchaseController {
             return new ResponseEntity<>("Failed to create purchase request", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/loadRequests")
+    public List<PurchaseRequest> loadRequests(){
+        return purchaseService.loadRequests();
+    }
+
 }
