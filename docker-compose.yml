@@ -31,3 +31,15 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo
+
+  purchase:
+    build: ./purchase
+    restart: unless-stopped
+    ports:
+      - "8094:8094"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=K@ssen1225
+      - TZ=Asia/Tokyo

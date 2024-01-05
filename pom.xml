@@ -16,10 +16,10 @@
         <module>filechecker</module>
         <module>downloader</module>
         <module>sync</module>
-<!--        <module>purchase</module>-->
+        <module>purchase</module>
     </modules>
-    <name>back</name>
-    <description>back</description>
+    <name>kassenwebback</name>
+    <description>kassenwebback</description>
     <properties>
         <java.version>21</java.version>
     </properties>
