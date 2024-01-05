@@ -31,8 +31,6 @@ public class PurchaseRequest{
 
     private String deliveryDate;
 
-    private String purchaseSource;
-
     private String purchaseSourceUrl;
 
     private LocalDateTime createdAt;

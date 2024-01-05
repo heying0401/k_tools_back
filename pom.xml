@@ -16,7 +16,7 @@
         <module>filechecker</module>
         <module>downloader</module>
         <module>sync</module>
-        <module>purchase</module>
+<!--        <module>purchase</module>-->
     </modules>
     <name>back</name>
     <description>back</description>

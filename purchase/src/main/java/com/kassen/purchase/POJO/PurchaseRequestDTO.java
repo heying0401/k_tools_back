@@ -23,8 +23,6 @@ public class PurchaseRequestDTO {
 
     private String deliveryDate;
 
-    private String purchaseSource;
-
     private String purchaseSourceUrl;
 
 }
