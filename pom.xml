@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kassen</groupId>
-    <artifactId>kassenwebback</artifactId>
+    <artifactId>kassenweb-back-</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
@@ -18,8 +18,8 @@
         <module>sync</module>
         <module>purchase</module>
     </modules>
-    <name>kassenwebback</name>
-    <description>kassenwebback</description>
+    <name>kassenweb-back-</name>
+    <description>kassenweb-back-</description>
     <properties>
         <java.version>21</java.version>
     </properties>
