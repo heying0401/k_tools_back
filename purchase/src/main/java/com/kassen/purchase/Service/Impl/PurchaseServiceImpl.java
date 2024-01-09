@@ -28,4 +28,16 @@ public class PurchaseServiceImpl implements PurchaseService {
     public List<PurchaseRequest> loadRequests() {
         return purchaseMapper.loadRequests();
     }
+
+    @Override
+    public boolean editPurchase(PurchaseRequestDTO purchaseRequestDTO) {
+        PurchaseRequest purchaseRequest = new PurchaseRequest();
+        BeanUtils.copyProperties(purchaseRequestDTO, purchaseRequest);
+        int rowsAffected = purchaseMapper.updateById(purchaseRequest);
+        return rowsAffected > 0;    }
+
+    @Override
+    public PurchaseRequest getPurchase(Integer id) {
+        return purchaseMapper.selectById(id);
+    }
 }

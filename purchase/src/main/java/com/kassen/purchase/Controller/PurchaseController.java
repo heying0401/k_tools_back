@@ -34,4 +34,19 @@ public class PurchaseController {
         return purchaseService.loadRequests();
     }
 
+    @GetMapping("/getPurchase")
+    public PurchaseRequest getPurchase(Integer id){
+        return purchaseService.getPurchase(id);
+    }
+
+    @PostMapping("/editPurchase")
+    public ResponseEntity<?> editPurchase(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
+        System.out.println(purchaseRequestDTO);
+        boolean isAdded = purchaseService.addPurchase(purchaseRequestDTO);
+        if (isAdded) {
+            return new ResponseEntity<>("Purchase request added successfully.", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Failed to create purchase request", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
