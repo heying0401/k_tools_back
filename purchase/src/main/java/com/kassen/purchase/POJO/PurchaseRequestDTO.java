@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PurchaseRequestDTO {
 
+    private Integer id;
     private String department;
     private String purchaseFrom;
     private String category;
@@ -15,6 +16,5 @@ public class PurchaseRequestDTO {
     private String approvedBy;
     private String purchaseBy;
     private String purchaseSourceUrl;
-
 }
 

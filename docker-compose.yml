@@ -9,13 +9,13 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
 
-  downloader:
-    build: ./downloader
-    restart: unless-stopped
-    ports:
-      - "8092:8092"
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
+#  downloader:
+#    build: ./downloader
+#    restart: unless-stopped
+#    ports:
+#      - "8092:8092"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
 
   sync:
     build: ./sync

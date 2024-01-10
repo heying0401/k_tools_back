@@ -34,7 +34,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         PurchaseRequest purchaseRequest = new PurchaseRequest();
         BeanUtils.copyProperties(purchaseRequestDTO, purchaseRequest);
         int rowsAffected = purchaseMapper.updateById(purchaseRequest);
-        return rowsAffected > 0;    }
+        return rowsAffected > 0;
+    }
 
     @Override
     public PurchaseRequest getPurchase(Integer id) {
