@@ -1,7 +1,7 @@
-package com.kassen.purchase.Mapper;
+package com.kassen.request.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.kassen.purchase.POJO.PurchaseRequest;
+import com.kassen.request.POJO.PurchaseRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

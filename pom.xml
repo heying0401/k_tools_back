@@ -16,7 +16,7 @@
         <module>filechecker</module>
         <module>downloader</module>
         <module>sync</module>
-        <module>purchase</module>
+        <module>request</module>
     </modules>
     <name>K_Tools_Back</name>
     <description>K_Tools_Back</description>

@@ -32,8 +32,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo
 
-  purchase:
-    build: ./purchase
+  request:
+    build: ./request
     restart: unless-stopped
     ports:
       - "8094:8094"

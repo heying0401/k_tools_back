@@ -1,4 +1,4 @@
-package com.kassen.purchase.POJO;
+package com.kassen.request.POJO;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +24,7 @@ public class PurchaseRequest{
     private String approvedBy;
     private String purchaseBy;
     private String purchaseSourceUrl;
+    private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

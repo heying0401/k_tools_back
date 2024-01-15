@@ -1,7 +1,7 @@
-package com.kassen.purchase.Service;
+package com.kassen.request.Service;
 
-import com.kassen.purchase.POJO.PurchaseRequest;
-import com.kassen.purchase.POJO.PurchaseRequestDTO;
+import com.kassen.request.POJO.PurchaseRequest;
+import com.kassen.request.POJO.PurchaseRequestDTO;
 
 import java.util.List;
 

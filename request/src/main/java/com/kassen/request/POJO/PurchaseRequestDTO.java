@@ -1,4 +1,4 @@
-package com.kassen.purchase.POJO;
+package com.kassen.request.POJO;
 
 import lombok.Data;
 
@@ -16,5 +16,6 @@ public class PurchaseRequestDTO {
     private String approvedBy;
     private String purchaseBy;
     private String purchaseSourceUrl;
+    private String comment;
 }
 

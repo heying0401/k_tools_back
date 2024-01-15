@@ -1,9 +1,9 @@
-package com.kassen.purchase.Service.Impl;
+package com.kassen.request.Service.Impl;
 
-import com.kassen.purchase.Mapper.PurchaseMapper;
-import com.kassen.purchase.POJO.PurchaseRequest;
-import com.kassen.purchase.POJO.PurchaseRequestDTO;
-import com.kassen.purchase.Service.PurchaseService;
+import com.kassen.request.Mapper.PurchaseMapper;
+import com.kassen.request.POJO.PurchaseRequest;
+import com.kassen.request.POJO.PurchaseRequestDTO;
+import com.kassen.request.Service.PurchaseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -67,6 +67,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // Construct the corresponding path in the target directory
+
                 Path relativePath = rootDir.relativize(file);
                 Path targetPath = targetDir.resolve(relativePath);
 
@@ -86,6 +87,9 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 // Ensure the corresponding directory exists in the target directory
+                System.out.println("Visiting directory: " + dir);
+
+
                 Path relativeDir = rootDir.relativize(dir);
                 Path targetDirPath = targetDir.resolve(relativeDir);
 

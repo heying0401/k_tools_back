@@ -1,8 +1,8 @@
-package com.kassen.purchase.Controller;
+package com.kassen.request.Controller;
 
-import com.kassen.purchase.POJO.PurchaseRequest;
-import com.kassen.purchase.POJO.PurchaseRequestDTO;
-import com.kassen.purchase.Service.PurchaseService;
+import com.kassen.request.POJO.PurchaseRequest;
+import com.kassen.request.POJO.PurchaseRequestDTO;
+import com.kassen.request.Service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
