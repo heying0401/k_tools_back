@@ -32,14 +32,25 @@ services:
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo
 
-  request:
-    build: ./request
+#  request:
+#    build: ./request
+#    restart: unless-stopped
+#    ports:
+#      - "8094:8094"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=K@ssen1225
+#      - TZ=Asia/Tokyo
+
+  shotlist:
+    build: ./shotlist
     restart: unless-stopped
     ports:
-      - "8094:8094"
+      - "8095:8095"
+    volumes:
+      - /mnt:/mnt
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo
