@@ -11,15 +11,33 @@ import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 @Service
 public class ShotlistService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ShotlistService.class);
+
     public String processDirectory(String directoryPath) throws IOException, InterruptedException {
+        logger.info("Processing directory: {}", directoryPath);
         File dir = new File(directoryPath);
-        File[] videoFiles = dir.listFiles((d, name) -> name.endsWith(".mp4") || name.endsWith(".mov")); // Adjust as needed
+        if (!dir.exists() || !dir.isDirectory()) {
+            logger.error("Directory does not exist or is not a directory: {}", directoryPath);
+            throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
+        }
+
+        File[] videoFiles = dir.listFiles((d, name) -> name.endsWith(".mp4") || name.endsWith(".mov"));
+        if (videoFiles == null || videoFiles.length == 0) {
+            logger.warn("No video files found in directory: {}", directoryPath);
+            return "No video files found";
+        }
+
         String thumbnailDirPath = directoryPath + "_thumbnails";
+        logger.info("Thumbnail directory path: {}", thumbnailDirPath);
+
 
         for (File videoFile : videoFiles) {
             extractThumbnail(videoFile.getAbsolutePath(), thumbnailDirPath);
@@ -37,8 +55,9 @@ public class ShotlistService {
         return generateSpreadsheet(thumbnailPaths, spreadsheetPath);
     }
 
-
     public void extractThumbnail(String videoFilePath, String thumbnailDirPath) throws IOException, InterruptedException {
+        logger.info("Extracting thumbnail for video file: {}", videoFilePath);
+
         File thumbnailDir = new File(thumbnailDirPath);
         if (!thumbnailDir.exists()) {
             boolean wasSuccessful = thumbnailDir.mkdirs();
@@ -58,11 +77,14 @@ public class ShotlistService {
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
+            logger.error("Failed to extract thumbnail for video: {}", videoFilePath);
             throw new IOException("Failed to extract thumbnail for video: " + videoFilePath);
         }
     }
 
     public String generateSpreadsheet(List<String> thumbnailPaths, String outputPath) throws IOException {
+        logger.info("Generating spreadsheet with thumbnail paths. Output path: {}", outputPath);
+
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Thumbnails");
             Row headerRow = sheet.createRow(0);
@@ -120,8 +142,7 @@ public class ShotlistService {
                 workbook.write(fos);
             }
         }
+        logger.info("Spreadsheet generated successfully: {}", outputPath);
         return outputPath;
     }
-
-
 }
