@@ -7,6 +7,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.*;
@@ -15,6 +16,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import net.jpountz.xxhash.XXHashFactory;
 
 @Service
 public class HardlinkService implements ApplicationListener<ContextClosedEvent> {
@@ -36,7 +38,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to set up file handler for logging", e);
         }
     }
 
@@ -47,7 +49,7 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
             try {
                 performSync(syncOperation);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                logger.log(Level.SEVERE, "Failed to perform sync operation", e);
             }
         }, 0, interval, TimeUnit.SECONDS);
 
@@ -67,7 +69,6 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // Construct the corresponding path in the target directory
-
                 Path relativePath = rootDir.relativize(file);
                 Path targetPath = targetDir.resolve(relativePath);
 
@@ -77,25 +78,28 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
                     Files.createDirectories(targetPath.getParent());
                     // Copy the file
                     Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING);
-//                        System.out.println("Copied: " + file + " to " + targetPath);
                     logger.log(Level.INFO, "コピー完了: {0}", relativePath);
                     newFilesCopied.set(true);
+
+                    // After copying, verify the file
+                    if (verifyCopy(file, targetPath)) {
+                        logger.log(Level.INFO, "ファイルベリファイに成功しました: {0}", new Object[]{relativePath});
+                    } else {
+                        logger.log(Level.SEVERE, "ファイルベリファイに失敗しました: {0}", new Object[]{relativePath});
+                        // Handle verification failure (e.g., throw an exception, retry, etc.)
+                    }
                 }
                 return FileVisitResult.CONTINUE;
             }
 
+
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                // Ensure the corresponding directory exists in the target directory
-                System.out.println("Visiting directory: " + dir);
-
-
                 Path relativeDir = rootDir.relativize(dir);
                 Path targetDirPath = targetDir.resolve(relativeDir);
 
                 if (Files.notExists(targetDirPath)) {
                     Files.createDirectories(targetDirPath);
-//                        System.out.println("Created directory: " + targetDirPath);
                     logger.log(Level.INFO, "ディレクトリ作成: {0}", relativeDir);
                 }
                 return FileVisitResult.CONTINUE;
@@ -117,19 +121,58 @@ public class HardlinkService implements ApplicationListener<ContextClosedEvent> 
         scheduledTasks.remove(operationId); // Remove from the tracking map
     }
 
+    private boolean verifyCopy(Path source, Path target) {
+        try {
+            long sourceHash = computeXXHash3(source);
+            long targetHash = computeXXHash3(target);
+            boolean verificationPassed = sourceHash == targetHash;
+
+            if (!verificationPassed) {
+                logger.log(Level.SEVERE, "ファイルベリファイに失敗しました。ソース: {0}, ターゲット: {1}", new Object[]{source, target});
+            }
+
+            return verificationPassed;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "ファイルベリファイ中にエラーが発生しました。ソース: {0}, ターゲット: {1}, エラー: {2}", new Object[]{source, target, e.getMessage()});
+            return false; // Consider verification failed if an error occurs during hashing
+        }
+    }
+
+    private long computeXXHash3(Path path) throws IOException {
+        XXHashFactory factory = XXHashFactory.fastestInstance();
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            byte[] buffer = new byte[8192]; // Buffer size
+            int read;
+            long hash = 0;
+            while ((read = inputStream.read(buffer)) != -1) {
+                hash = factory.hash64().hash(buffer, 0, read, hash);
+            }
+            return hash;
+        } catch (IOException e) {
+            // Log error without stack trace
+            logger.log(Level.SEVERE, "ハッシュ計算中にエラーが発生しました。パス: {0}, エラー: {1}", new Object[]{path, e.getMessage()});
+            throw e; // Re-throw to handle upstream
+        }
+    }
+
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        fileHandler.close();
-        logger.removeHandler(fileHandler);
-        int i = syncService.updateAllStatus(SyncOperation.SyncStatus.STOPPED);
-        System.out.println("Stopped " + i + " Job(s)");
-        scheduler.shutdownNow();
         try {
+            logger.log(Level.INFO, "Shutting down...");
+            scheduler.shutdownNow();
             if (!scheduler.awaitTermination(800, TimeUnit.MILLISECONDS)) {
                 scheduler.shutdownNow();
+                if (!scheduler.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                    logger.log(Level.SEVERE, "Scheduler did not terminate");
+                }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        } finally {
+            fileHandler.close();
+            logger.removeHandler(fileHandler);
         }
+        int i = syncService.updateAllStatus(SyncOperation.SyncStatus.STOPPED);
+        logger.log(Level.INFO, "Stopped {0} Job(s)", i);
     }
 }

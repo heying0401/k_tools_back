@@ -25,6 +25,7 @@ services:
     volumes:
       - /home/h-yu/Documents/logs:/home/h-yu/logs
       - /mnt:/mnt
+      - /run/media/h-yu/KASSENvfx03:/data
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
