@@ -26,6 +26,7 @@ public class HardlinkController {
     public ResponseEntity<HardlinkResponse> uploadFileAndCreateHardlinks(
             @RequestParam("file") MultipartFile file,
             @RequestParam("baseDir") String baseDir) {
+//        logger.info("base dir: {}", baseDir);
         try {
             HardlinkResponse response = csvHardlinkService.processCsv(file, baseDir);
             return ResponseEntity.ok(response);

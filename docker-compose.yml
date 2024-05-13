@@ -9,6 +9,18 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
 
+  hardlink:
+    build: ./hardlink
+    restart: unless-stopped
+    ports:
+      - "8096:8096"
+    volumes:
+      - /mnt:/mnt
+      - /home/h-yu/Documents/logs:/home/h-yu/logs
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - TZ=Asia/Tokyo
+
 #  downloader:
 #    build: ./downloader
 #    restart: unless-stopped
@@ -32,18 +44,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=K@ssen1225
       - TZ=Asia/Tokyo
-
-#  request:
-#    build: ./request
-#    restart: unless-stopped
-#    ports:
-#      - "8094:8094"
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.20.116:3306/KASSEN
-#      - SPRING_DATASOURCE_USERNAME=root
-#      - SPRING_DATASOURCE_PASSWORD=K@ssen1225
-#      - TZ=Asia/Tokyo
 
   shotlist:
     build: ./shotlist

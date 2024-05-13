@@ -28,21 +28,30 @@ public class CsvHardlinkService {
             csvReader.readNext();
 
             while ((nextLine = csvReader.readNext()) != null) {
-                String vfxShotNo = nextLine[0];
-                String type = nextLine[1];
-                String reelPath = nextLine[2];
+                response.incrementTotalCount();
+                try {
+                    String vfxShotNo = nextLine[0];
+                    String type = nextLine[1];
+                    String reelPath = nextLine[2];
 
-                String destinationPath = buildDestinationPath(vfxShotNo, type, baseDir);
-                boolean success = createHardlink(reelPath, destinationPath);
-                if (success) {
-                    response.incrementSuccessCount();
-                } else {
+                    String destinationPath = buildDestinationPath(vfxShotNo, type, baseDir);
+                    if (createHardlink(reelPath, destinationPath)) {
+                        response.incrementSuccessCount();
+                    } else {
+                        response.incrementFailureCount();
+                        response.addFailedVFXShot(vfxShotNo);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error processing line: {}", (Object) nextLine, e);
                     response.incrementFailureCount();
-                    response.addFailedVFXShot(vfxShotNo);
-                }
+                    if (nextLine != null && nextLine.length > 0) {
+                        response.addFailedVFXShot(nextLine[0]);
+                    }                }
             }
-            return response;
+        } catch (Exception e) {
+            logger.error("Failed to process CSV file", e);
         }
+        return response;
     }
 
 
@@ -57,7 +66,10 @@ public class CsvHardlinkService {
             baseDir += "/";
         }
 
-        return baseDir + episodeNumber + "/" + vfxShotNo + "/" + vfxShotNo + "_" + type;
+        String fileName = baseDir.substring(baseDir.lastIndexOf('/') + 1);
+
+
+        return baseDir + episodeNumber + "/" + vfxShotNo + "/" + vfxShotNo + "_" + type + "/" + fileName;
     }
 
 
@@ -65,6 +77,11 @@ public class CsvHardlinkService {
     private boolean createHardlink(String source, String destination) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
+            File destFile = new File(destination);
+            if (destFile.exists()) {
+                logger.info("Destination already exists: {}", destination);
+                return false;  // Or handle as needed if overwriting is intended
+            }
             // Ensure the destination directory exists
             String destinationDir = destination.substring(0, destination.lastIndexOf('/'));
             Files.createDirectories(Paths.get(destinationDir));
