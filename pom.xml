@@ -17,7 +17,7 @@
         <module>downloader</module>
         <module>sync</module>
         <module>shotlist</module>
-<!--        <module>request</module>-->
+        <module>hardlink</module>
     </modules>
     <name>K_Tools_Back</name>
     <description>K_Tools_Back</description>
