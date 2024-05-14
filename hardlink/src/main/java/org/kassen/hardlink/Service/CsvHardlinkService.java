@@ -37,7 +37,7 @@ public class CsvHardlinkService {
                     String destinationPath = buildDestinationPath(vfxShotNo, type, baseDir);
                     logger.info("Destination path: {}", destinationPath);
 
-                    if (createHardlink(reelPath, destinationPath)) {
+                    if (createHardlink(reelPath, destinationPath, vfxShotNo, response)) {
                         response.incrementSuccessCount();
                     } else {
                         response.incrementFailureCount();
@@ -74,16 +74,20 @@ public class CsvHardlinkService {
         return baseDir + episodeNumber + "/" + vfxShotNo + "/" + vfxShotNo + "_" + type + "/" + fileName;
     }
 
-
-
-    private boolean createHardlink(String source, String destination) {
+    private boolean createHardlink(String source, String destination, String vfxShotNo, HardlinkResponse response) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
-//            File destFile = new File(destination);
+            String fileName = source.substring(source.lastIndexOf('/') + 1);
+            String fullDestinationPath = destination + fileName;
+
+            File destFile = new File(fullDestinationPath);
+            boolean fileExists = destFile.exists();
+
 //            if (destFile.exists()) {
 //                logger.info("Destination already exists: {}", destination);
 //                return false;  // Or handle as needed if overwriting is intended
 //            }
+
             // Ensure the destination directory exists
             String destinationDir = destination.substring(0, destination.lastIndexOf('/'));
             Files.createDirectories(Paths.get(destinationDir));
@@ -106,12 +110,13 @@ public class CsvHardlinkService {
             }
 
             int exitCode = process.waitFor();
-            logger.debug("Command executed, exit code: {}", exitCode);
-
             if (exitCode != 0) {
                 logger.error("Hardlink creation command failed with exit code {}", exitCode);
                 logger.error("Command output: {}", output.toString());
                 return false;
+            }
+            if (fileExists) {
+                response.addOverwrittenFile(vfxShotNo); // Record the overwritten file
             }
             return true;
         } catch (IOException | InterruptedException e) {

@@ -11,13 +11,18 @@ public class HardlinkResponse {
     private int failureCount;
     private int totalCount;
     private List<String> failedVFXShots;
+    private List<String> overwrittenFiles;
 
     public HardlinkResponse() {
-        this.failedVFXShots = new ArrayList<>(); // Initialize the list here to prevent NullPointerException.
+        this.failedVFXShots = new ArrayList<>();
+        this.overwrittenFiles = new ArrayList<>();
     }
 
     public void addFailedVFXShot(String vfxShot) {
         this.failedVFXShots.add(vfxShot);
+    }
+    public void addOverwrittenFile(String file) {
+        this.overwrittenFiles.add(file);
     }
 
     public void incrementTotalCount() {
