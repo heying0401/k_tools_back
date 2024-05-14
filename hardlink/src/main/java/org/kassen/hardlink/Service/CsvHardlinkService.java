@@ -35,6 +35,8 @@ public class CsvHardlinkService {
                     String reelPath = nextLine[2];
 
                     String destinationPath = buildDestinationPath(vfxShotNo, type, baseDir);
+                    logger.info("Destination path: {}", destinationPath);
+
                     if (createHardlink(reelPath, destinationPath)) {
                         response.incrementSuccessCount();
                     } else {
@@ -77,11 +79,11 @@ public class CsvHardlinkService {
     private boolean createHardlink(String source, String destination) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
-            File destFile = new File(destination);
-            if (destFile.exists()) {
-                logger.info("Destination already exists: {}", destination);
-                return false;  // Or handle as needed if overwriting is intended
-            }
+//            File destFile = new File(destination);
+//            if (destFile.exists()) {
+//                logger.info("Destination already exists: {}", destination);
+//                return false;  // Or handle as needed if overwriting is intended
+//            }
             // Ensure the destination directory exists
             String destinationDir = destination.substring(0, destination.lastIndexOf('/'));
             Files.createDirectories(Paths.get(destinationDir));
