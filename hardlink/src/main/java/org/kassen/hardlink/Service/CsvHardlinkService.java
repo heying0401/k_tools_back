@@ -86,7 +86,10 @@ public class CsvHardlinkService {
             String destinationDir = destination.substring(0, destination.lastIndexOf('/'));
             Files.createDirectories(Paths.get(destinationDir));
 
-            processBuilder.command("bash", "-c", "cp -lruv \"" + source + "\" \"" + destination + "\"");
+            String command = "cp -lruv \"" + source + "\" \"" + destination + "\"";
+            logger.info("Executing command: {}", command);
+
+            processBuilder.command("bash", "-c", command);
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
