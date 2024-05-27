@@ -77,11 +77,18 @@ public class CsvHardlinkService {
     private boolean createHardlink(String source, String destination, String vfxShotNo, HardlinkResponse response) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
+            File sourceFile = new File(source);
+            logger.info("Checking if source file exists: {}", sourceFile.exists());
+            logger.info("Readable: {}, Writable: {}", sourceFile.canRead(), sourceFile.canWrite());
+
             String fileName = source.substring(source.lastIndexOf('/') + 1);
             String fullDestinationPath = destination + fileName;
 
+            logger.info("fullDestinationPath is: {}", fullDestinationPath);
+
             File destFile = new File(fullDestinationPath);
             boolean fileExists = destFile.exists();
+
 
 //            if (destFile.exists()) {
 //                logger.info("Destination already exists: {}", destination);
@@ -91,6 +98,11 @@ public class CsvHardlinkService {
             // Ensure the destination directory exists
             String destinationDir = destination.substring(0, destination.lastIndexOf('/'));
             Files.createDirectories(Paths.get(destinationDir));
+
+            if (!Files.exists(Paths.get(destinationDir))) {
+                logger.error("Failed to create directory: {}", destinationDir);
+                return false;
+            }
 
             String command = "cp -lruv \"" + source + "\" \"" + destination + "\"";
             logger.info("Executing command: {}", command);
@@ -111,7 +123,6 @@ public class CsvHardlinkService {
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                logger.error("Hardlink creation command failed with exit code {}", exitCode);
                 logger.error("Command output: {}", output.toString());
                 return false;
             }
