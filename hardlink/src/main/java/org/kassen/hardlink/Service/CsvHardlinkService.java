@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import org.kassen.hardlink.POJO.HardlinkResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CsvHardlinkService {
     private static final Logger logger = LoggerFactory.getLogger(CsvHardlinkService.class);
 
-    public HardlinkResponse processCsv(MultipartFile file, String baseDir) throws Exception {
+    public HardlinkResponse processCsv(MultipartFile file, String baseDir) {
         HardlinkResponse response = new HardlinkResponse();
 
         try (InputStreamReader reader = new InputStreamReader(file.getInputStream());
