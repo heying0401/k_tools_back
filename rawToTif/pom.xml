@@ -6,14 +6,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.0</version>
-        <relativePath/>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.kassen</groupId>
-    <artifactId>downloader</artifactId>
+    <groupId>org.kassen</groupId>
+    <artifactId>rawToTif</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>downloader</name>
-    <description>downloader</description>
-    <packaging>jar</packaging>
+    <name>rawToTif</name>
+    <description>rawToTif</description>
     <properties>
         <java.version>21</java.version>
     </properties>
@@ -22,17 +21,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.16.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
