@@ -1,4 +1,4 @@
-version: '2'
+name: kassen-tools
 
 services:
   filechecker:
@@ -8,18 +8,6 @@ services:
       - "8091:8091"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-
-  hardlink:
-    build: ./hardlink
-    restart: unless-stopped
-    ports:
-      - "8096:8096"
-    volumes:
-      - /mnt:/mnt
-      - /home/h-yu/logs:/logs
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - TZ=Asia/Tokyo
 
 #  downloader:
 #    build: ./downloader
@@ -35,7 +23,7 @@ services:
     ports:
       - "8093:8093"
     volumes:
-      - /home/h-yu/Documents/logs:/home/h-yu/logs
+      - /home/h-yu/logs:/logs
       - /mnt:/mnt
       - /run/media/h-yu/KASSENvfx03:/data
     environment:
@@ -52,6 +40,30 @@ services:
       - "8095:8095"
     volumes:
       - /mnt:/mnt
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - TZ=Asia/Tokyo
+
+  hardlink:
+    build: ./hardlink
+    restart: unless-stopped
+    ports:
+      - "8096:8096"
+    volumes:
+      - /mnt:/mnt
+      - /home/h-yu/logs:/logs
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - TZ=Asia/Tokyo
+
+  rawtotif:
+    build: ./rawToTif
+    restart: unless-stopped
+    ports:
+      - "8097:8097"
+    volumes:
+      - /mnt:/mnt
+      - /home/h-yu/logs:/logs
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - TZ=Asia/Tokyo

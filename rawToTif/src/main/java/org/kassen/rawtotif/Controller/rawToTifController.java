@@ -5,12 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
 
 @RestController
+@EnableAsync
 @CrossOrigin(origins = "*")
 public class rawToTifController {
 
@@ -19,16 +22,11 @@ public class rawToTifController {
     @Autowired
     private rawToTifService rawToTifService;
 
-    @PostMapping("/raw")
-    public String uploadFileAndCreateHardlinks(
-            @RequestParam("rawDir") String rawDir) {
-        try {
-            rawToTifService.processDirectory(rawDir);
-//            HardlinkResponse response = csvHardlinkService.processCsv(rawDir);
-            return "OK";
-        } catch (Exception e) {
-            logger.error("Error processing file", e);
-            return "not ok";
-        }
+    @GetMapping("/raw")
+    public SseEmitter processRaw(@RequestParam("rawDir") String rawDir) {
+        SseEmitter emitter = new SseEmitter();
+        rawToTifService.processDirectoryAsync(rawDir, emitter);
+        logger.info("Returning SseEmitter: {}", emitter);
+        return emitter;
     }
 }
